@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh auth:*)",
+      "Bash(curl --version)",
+      "Read(//c/Users/**)",
+      "Bash(ls \"d:/1_ HERNAN/1_HERNAN SynC_24/5_VARIOS HERNAN/4_ ESPIRITUALIDAD HERNAN/CUSO DE CONSTELACIONES/GUIA-8/QUIZ_8/\"*.msi)",
+      "Bash(msiexec /i \"D:\\\\1_ HERNAN\\\\1_HERNAN SynC_24\\\\5_VARIOS HERNAN\\\\4_ ESPIRITUALIDAD HERNAN\\\\CUSO DE CONSTELACIONES\\\\GUIA-8\\\\QUIZ_8\\\\gh_2.88.1_windows_amd64.msi\" /quiet /norestart)",
+      "Bash(msiexec /i \"D:\\\\1_ HERNAN\\\\1_HERNAN SynC_24\\\\5_VARIOS HERNAN\\\\4_ ESPIRITUALIDAD HERNAN\\\\CUSO DE CONSTELACIONES\\\\GUIA-8\\\\QUIZ_8\\\\gh_2.88.1_windows_amd64.msi\" /passive)",
+      "Bash(gh --version)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth login --web --hostname github.com)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth status)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo create quiz-8-constelaciones --public --description \"Quiz 8 - Curso de Constelaciones\")"
+    ]
+  }
+}
