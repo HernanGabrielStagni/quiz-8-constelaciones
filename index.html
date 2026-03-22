@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evaluación — Constelaciones Familiares</title>
+    <meta
+      name="description"
+      content="Evaluación de conocimientos sobre Constelaciones Familiares. Completa el formulario y responde las preguntas para obtener tu puntaje."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="video-overlay">
+      <div id="intro-controls" class="intro-controls">
+        <h3>Presentación</h3>
+        <div class="controls-row">
+          <button id="play-intro" class="ctrl-btn play">Iniciar</button>
+          <button id="skip-intro" class="ctrl-btn skip">Saltar</button>
+        </div>
+      </div>
+      <video id="intro-video" playsinline>
+        <source
+          src="img/FINAL ANIMACION ESPACIO SEMILLAS.MP4"
+          type="video/mp4"
+        />
+        Tu navegador no soporta video.
+      </video>
+    </div>
+
+    <!-- Fondo de estrellas -->
+    <div id="stars-bg"></div>
+
+    <!-- Barra de marca persistente (se activa al hacer scroll) -->
+    <div id="sticky-brand-bar" class="sticky-brand-bar">
+      <div class="mini-logo-frame">
+        <img src="img/Logo espacio semillas.jpg" alt="Logo mini" />
+      </div>
+      <span class="brand-name">Espacio Semillas</span>
+    </div>
+
+    <div id="app">
+      <div class="logo-container" id="main-logo-container">
+        <img src="img/Logo espacio semillas.jpg" alt="Espacio Semillas" />
+      </div>
+      <header class="site-header">
+        <h1 id="quiz-course-title">Constelaciones Familiares</h1>
+        <div class="badge" id="quiz-unit-badge">Cargando...</div>
+        <p id="quiz-module-subtitle"></p>
+      </header>
+
+      <!-- PANTALLA 1 — Datos -->
+      <div id="screen-form" class="screen active">
+        <div class="card">
+          <form id="studentForm" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label>Nombre *</label>
+                <input
+                  type="text"
+                  id="nombre"
+                  required
+                  placeholder="Tu nombre"
+                />
+                <span id="nombre-error" class="error-msg"
+                  >El nombre es obligatorio</span
+                >
+              </div>
+              <div class="field">
+                <label>Apellido *</label>
+                <input
+                  type="text"
+                  id="apellido"
+                  required
+                  placeholder="Tu apellido"
+                />
+                <span id="apellido-error" class="error-msg"
+                  >El apellido es obligatorio</span
+                >
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Email (Opcional)</label>
+                <input type="email" id="email" placeholder="ejemplo@mail.com" />
+                <span id="email-error" class="error-msg"
+                  >Formato de email incorrecto</span
+                >
+              </div>
+              <div class="field">
+                <label>DNI *</label>
+                <input
+                  type="text"
+                  id="dni"
+                  required
+                  placeholder="Solo números"
+                />
+                <span id="dni-error" class="error-msg"
+                  >DNI requerido (mín. 7 dígitos)</span
+                >
+              </div>
+            </div>
+            <button
+              type="submit"
+              id="startQuizBtn"
+              class="btn btn-primary"
+              disabled
+              style="width: 100%; margin-top: 2rem"
+            >
+              Comenzar Evaluación →
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- PANTALLA 2 — Quiz -->
+      <div id="screen-quiz" class="screen">
+        <!-- Removida la barra de progreso superior por pedido del usuario -->
+        <div id="quiz"></div>
+        <div id="pendingSection" style="display: none">
+          <strong id="pendingTitle">Preguntas sin responder:</strong>
+          <div id="pendingList" style="margin-bottom: 2rem"></div>
+
+          <button
+            class="btn btn-primary"
+            id="scoreBtn"
+            disabled
+            style="width: 100%; padding: 1.2rem"
+          >
+            Calificar primer intento
+          </button>
+        </div>
+        <div id="message" class="msg"></div>
+
+        <!-- RESULTADOS PREMIUM (Estilo Stitch) -->
+        <div
+          id="results-area"
+          class="results-screen screen"
+          style="display: none"
+        >
+          <div class="results-card">
+            <h2 id="result-title">Resultado Parcial</h2>
+
+            <!-- El Círculo Mágico de Progreso -->
+            <div class="progress-container">
+              <div class="ring-box">
+                <svg width="160" height="160" viewBox="0 0 160 160">
+                  <defs>
+                    <linearGradient
+                      id="grad1"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="100%"
+                    >
+                      <stop
+                        offset="0%"
+                        style="stop-color: var(--teal); stop-opacity: 1"
+                      />
+                      <stop
+                        offset="100%"
+                        style="stop-color: var(--accent); stop-opacity: 1"
+                      />
+                    </linearGradient>
+                  </defs>
+                  <circle class="ring-bg" cx="80" cy="80" r="70"></circle>
+                  <circle
+                    id="ring-fill"
+                    class="ring-fill"
+                    cx="80"
+                    cy="80"
+                    r="70"
+                    stroke-dasharray="440"
+                    stroke-dashoffset="440"
+                  ></circle>
+                </svg>
+                <div class="ring-text">
+                  <span id="final-pct-display" class="pct-num">0%</span>
+                  <span
+                    id="final-grade-display"
+                    class="grade-num"
+                    style="display: none"
+                    >0.0</span
+                  >
+                  <span class="pct-label">Puntaje</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Badge de Rango -->
+            <div
+              class="rank-container"
+              id="rank-container"
+              style="display: none"
+            >
+              <div id="rankBadge" class="rank-badge">Evaluando...</div>
+            </div>
+
+            <!-- Grid de Estadísticas (2 Cards: Intentos) -->
+            <div id="final-stats-grid" class="stats-grid" style="display: none">
+              <div class="stat-card">
+                <span id="score1-grade" class="stat-grade">0.0</span>
+                <div class="stat-meta">
+                  <span id="score1-pct" class="stat-pct">0%</span>
+                  <span class="stat-divider">-</span>
+                  <span id="score1-val" class="stat-val">0/15</span>
+                </div>
+                <span class="stat-label">1° Intento</span>
+              </div>
+              <div class="stat-card">
+                <span id="score2-grade" class="stat-grade">0.0</span>
+                <div class="stat-meta">
+                  <span id="score2-pct" class="stat-pct">0%</span>
+                  <span class="stat-divider">-</span>
+                  <span id="score2-val" class="stat-val">0/15</span>
+                </div>
+                <span class="stat-label">2° Intento</span>
+              </div>
+            </div>
+
+            <div
+              id="finalFeedback"
+              class="final-feedback"
+              style="display: none"
+            ></div>
+            <div id="sendStatus" class="send-status"></div>
+            <button
+              id="adminAccessBtn"
+              class="admin-access-btn"
+              onclick="handleAdminAccess()"
+            >
+              REGISTRO DE NOTAS
+            </button>
+
+            <!-- Recuadro para introducir la clave -->
+            <div id="adminLoginBox" class="admin-login-box">
+              <input
+                type="password"
+                id="adminKey"
+                class="admin-input"
+                placeholder="Introduce la clave"
+              />
+              <p
+                id="admin-error-msg"
+                style="
+                  display: none;
+                  color: #ff5252;
+                  font-size: 0.8rem;
+                  font-weight: 700;
+                  margin-bottom: -5px;
+                  padding: 5px 10px;
+                  background: rgba(255, 82, 82, 0.1);
+                  border-radius: 6px;
+                "
+              ></p>
+              <button class="admin-verify-btn" onclick="verifyAdmin()">
+                Verificar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de Navegación Flotantes -->
+    <div class="nav-floats">
+      <button
+        id="nav-to-bottom"
+        class="float-btn down"
+        title="Ir al final"
+        onclick="
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth',
+          })
+        "
+      >
+        <span class="btn-text">¿Ir al final?</span>
+        <svg
+          class="btn-icon-svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+        </svg>
+      </button>
+      <button
+        id="nav-to-top"
+        class="float-btn up"
+        title="Ir al principio"
+        onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      >
+        <svg
+          class="btn-icon-svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M17 11l-5-5-5 5M17 18l-5-5-5 5" />
+        </svg>
+      </button>
+    </div>
+
+    <script>
+      // Ocultar/Mostrar botón "Arriba" basado en el scroll
+      window.onscroll = function () {
+        const topBtn = document.getElementById("nav-to-top");
+        const bottomBtn = document.getElementById("nav-to-bottom");
+        const brandBar = document.getElementById("sticky-brand-bar");
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        const bodyHeight = document.documentElement.scrollHeight;
+
+        // Barra de Marca Persistente
+        if (scrollY > 150) {
+          brandBar.classList.add("visible");
+        } else {
+          brandBar.classList.remove("visible");
+        }
+
+        // Lógica para el botón "Ir al principio" (Arriba)
+        if (scrollY > 300) {
+          topBtn.style.opacity = "1";
+          topBtn.style.pointerEvents = "auto";
+          topBtn.style.transform = "translateY(0)";
+        } else {
+          topBtn.style.opacity = "0";
+          topBtn.style.pointerEvents = "none";
+          topBtn.style.transform = "translateY(20px)";
+        }
+
+        // Lógica para el botón "Ir al final" (Abajo)
+        if (scrollY + windowHeight < bodyHeight - 100) {
+          bottomBtn.style.opacity = "1";
+          bottomBtn.style.pointerEvents = "auto";
+          bottomBtn.style.transform = "translateY(0)";
+        } else {
+          bottomBtn.style.opacity = "0";
+          bottomBtn.style.pointerEvents = "none";
+          bottomBtn.style.transform = "translateY(-20px)";
+        }
+      };
+      window.dispatchEvent(new Event("scroll"));
+
+      /**
+       * CONFIGURACIÓN DEL QUIZ
+       * Solo necesitas cambiar estos datos para actualizar la evaluación completa.
+       */
+      const QUIZ_CONFIG = {
+        courseTitle: "Constelaciones Familiares",
+        quizNumber: "8",
+        moduleSubtitle: "El trabajo personal",
+        appsScriptUrl:
+          "https://script.google.com/macros/s/AKfycbwWpu8DH_JQ6ZZ1Rqoz1YJ8xMxYRRys3gYYIM0Q7RP4AHB6CxqApTzmgKYvy0pZuqFX/exec",
+        questions: [
+          {
+            q: "¿A qué le llama Bert Hellinger el movimiento de un bebé hacia su madre?",
+            opts: [
+              "a) La expectativa interna de amor y afecto.",
+              "b) El movimiento de un hermano hacia su hermana.",
+              "c) Un movimiento hacia los antepasados.",
+              "d) Todos los movimientos de un bebé.",
+            ],
+            correct: 0,
+          },
+          {
+            q: "¿Cuándo se interrumpe generalmente el movimiento del bebé?",
+            opts: [
+              "a) Cuando fallece un hermano o hermana.",
+              "b) Por la muerte de uno de los abuelos.",
+              "c) Por la muerte de la madre.",
+              "d) Por ninguna muerte.",
+            ],
+            correct: 2,
+          },
+          {
+            q: "Un trauma de nacimiento se genera:",
+            opts: [
+              "a) Los traumas de nacimiento no existen.",
+              "b) Cuando la madre tiene miedo del parto.",
+              "c) Cuando el parto es fácil.",
+              "d) Cuando el parto es difícil.",
+            ],
+            correct: 3,
+          },
+          {
+            q: "Rebirthing significa:",
+            opts: [
+              "a) Un parto difícil.",
+              "b) Una técnica de respiración.",
+              "c) Un trauma de nacimiento.",
+              "d) El miedo por el parto.",
+            ],
+            correct: 1,
+          },
+          {
+            q: "¿Qué NO necesita un bebé?",
+            opts: [
+              "a) Padres que no son receptivos.",
+              "b) Padres con problemas.",
+              "c) Padres que han resuelto sus problemas.",
+              "d) Respeto.",
+            ],
+            correct: 0,
+          },
+          {
+            q: "¿Qué NO necesita un bebé? (II)",
+            opts: [
+              "a) Una conexión con la madre.",
+              "b) Ningún contacto físico con la madre.",
+              "c) Una depresión postnatal de la madre.",
+              "d) Un embarazo con pocas preparaciones.",
+            ],
+            correct: 1,
+          },
+          {
+            q: "¿La presencia del padre en el parto, es deseable?",
+            opts: [
+              "a) No, porque le estorba al médico.",
+              "b) No, porque distrae a la madre.",
+              "c) Sí, hace posible una unión profunda con el bebé.",
+              "d) No tiene ninguna importancia.",
+            ],
+            correct: 2,
+          },
+          {
+            q: "¿Cuál es el mejor alimento para el bebé?",
+            opts: [
+              "a) Las verduras.",
+              "b) El pecho.",
+              "c) El biberón.",
+              "d) Las legumbres combinadas con el biberón.",
+            ],
+            correct: 1,
+          },
+          {
+            q: "¿Es beneficioso para un bebé dormir con sus padres?",
+            opts: [
+              "a) No, porque esto significa que es excluido por los padres.",
+              "b) Sí, porque de esta manera, no es excluido.",
+              "c) No, porque tiene una habitación preciosa.",
+              "d) No, porque entonces, el bebé no es excluido.",
+            ],
+            correct: 1,
+          },
+          {
+            q: "La meditación del Niño Interior nos permite observar nuestro:",
+            opts: [
+              "a) Miedo.",
+              "b) Dolor.",
+              "c) Tristeza.",
+              "d) Todas las opciones mencionadas.",
+            ],
+            correct: 3,
+          },
+          {
+            q: "Un genograma es una ilustración de:",
+            opts: [
+              "a) Unas células.",
+              "b) Un árbol genealógico.",
+              "c) Una relación familiar.",
+              "d) Un parto.",
+            ],
+            correct: 1,
+          },
+          {
+            q: "Los genogramas se utilizan en:",
+            opts: [
+              "a) El trabajo social.",
+              "b) La pedagogía.",
+              "c) La psiquiatría.",
+              "d) Todas las opciones mencionadas.",
+            ],
+            correct: 3,
+          },
+          {
+            q: "¿Qué debes hacer después de una constelación?",
+            opts: [
+              "a) Hablar de ella lo máximo posible.",
+              "b) Hablar lo menos posible al respecto.",
+              "c) Responder a las preguntas de los asistentes al taller.",
+              "d) Compartir experiencias con los participantes del taller.",
+            ],
+            correct: 1,
+          },
+          {
+            q: "¿Cuánto tiempo es recomendado esperar antes de la siguiente constelación?",
+            opts: [
+              "a) Un par de horas.",
+              "b) Un par de días.",
+              "c) Un par de semanas.",
+              "d) Un par de meses.",
+            ],
+            correct: 3,
+          },
+          {
+            q: "¿Es posible que alguien dé más de lo que ha recibido?",
+            opts: [
+              "a) Sí, mucho más.",
+              "b) Sí, un poco más.",
+              "c) No, a menos que haga lo mejor posible.",
+              "d) Nadie puede dar más de lo que él mismo ha recibido.",
+            ],
+            correct: 3,
+          },
+        ],
+      };
+
+      const bank = QUIZ_CONFIG.questions;
+      const APPS_SCRIPT_URL = QUIZ_CONFIG.appsScriptUrl;
+
+      const feedbackPhrases = {
+        high: [
+          "¡Brillante! 🌟 Dominas los órdenes del amor con una claridad profunda. Sigue cultivando esta mirada sistémica.",
+          "¡Excelente trabajo! Se nota tu compromiso con el aprendizaje. Tu comprensión ayudará a sanar vínculos.",
+          "¡Increíble! Has integrado los conceptos con maestría. Sigue adelante con esta luz y sabiduría.",
+        ],
+        mid: [
+          "¡Muy bien! 💫 Has aprobado y estás integrando los conceptos fundamentales. Hay una base sólida en ti.",
+          "¡Buen desempeño! Lograste una comprensión clara. Te alentamos a seguir practicando esta nueva mirada.",
+          "¡Aprobado! Estás en el camino correcto. Revisa los puntos donde dudaste para fortalecer tu sabiduría sistémica.",
+        ],
+        low: [
+          "¡No te desanimes! 🌱 El camino de las constelaciones es un proceso de capas. Te invitamos a releer el material con calma.",
+          "Cada error es una oportunidad para mirar algo nuevo. Te alentamos a profundizar en los conceptos y volver a intentar.",
+          "Estás en proceso de aprendizaje. Toma este resultado como un estímulo para volver a mirar los órdenes del amor con nuevos ojos.",
+        ],
+      };
+
+      let studentData = {};
+      let score1 = 0;
+      let score2 = 0;
+      let firstAttemptSelections = []; // Guardamos las elecciones originales para comparar
+      let attempts = 0;
+      let locked = false;
+
+      // CONTROL VIDEO
+      window.addEventListener("DOMContentLoaded", () => {
+        const overlay = document.getElementById("video-overlay");
+        const video = document.getElementById("intro-video");
+
+        // Función para ocultar overlay e inicializar títulos
+        const skipVideo = () => {
+          // Inicializar títulos dinámicos desde la configuración
+          document.getElementById("quiz-unit-badge").textContent =
+            `Quiz Unidad ${QUIZ_CONFIG.quizNumber}`;
+          document.getElementById("quiz-course-title").textContent =
+            QUIZ_CONFIG.courseTitle;
+          document.getElementById("quiz-module-subtitle").textContent =
+            QUIZ_CONFIG.moduleSubtitle;
+
+          overlay.classList.add("hidden");
+          sessionStorage.setItem("quizStarted", "true"); // Marcamos que ya pasó la intro
+          setTimeout(() => overlay.remove(), 1000);
+        };
+
+        // Referencias a los botones nuevos
+        const playBtn = document.getElementById("play-intro");
+        const skipBtn = document.getElementById("skip-intro");
+        const controls = document.getElementById("intro-controls");
+
+        if (playBtn) {
+          playBtn.onclick = () => {
+            video.play();
+            controls.style.display = "none";
+          };
+        }
+        if (skipBtn) skipBtn.onclick = skipVideo;
+
+        try {
+          const navEntries = performance.getEntriesByType("navigation");
+          const isReload =
+            navEntries.length > 0 && navEntries[0].type === "reload";
+          const alreadyStarted = sessionStorage.getItem("quizStarted");
+
+          if (isReload && alreadyStarted) {
+            // Solo saltamos si es un refresco Y ya se había pasado la intro antes
+            skipVideo();
+          } else {
+            // En cualquier otro caso (visita nueva o refresco antes de empezar), mostramos intro
+            overlay.classList.remove("hidden");
+            video.onended = skipVideo;
+          }
+        } catch (e) {
+          skipVideo();
+        }
+
+        // VALIDACIÓN DE FORMULARIO EN TIEMPO REAL
+        const studentForm = document.getElementById("studentForm");
+        const startBtn = document.getElementById("startQuizBtn");
+        const registrationInputs = ["nombre", "apellido", "dni"];
+
+        const validateForm = (e) => {
+          const nombreInput = document.getElementById("nombre");
+          const apellidoInput = document.getElementById("apellido");
+          const dniInput = document.getElementById("dni");
+          const emailInput = document.getElementById("email");
+
+          const nombreVal = nombreInput.value.trim();
+          const apellidoVal = apellidoInput.value.trim();
+          const dniVal = dniInput.value.trim();
+          const emailVal = emailInput.value.trim();
+
+          // Feedback de Nombre
+          const nombreErr = document.getElementById("nombre-error");
+          if (nombreVal === "") {
+            nombreErr.classList.add("visible");
+            nombreInput.classList.add("input-error");
+          } else {
+            nombreErr.classList.remove("visible");
+            nombreInput.classList.remove("input-error");
+          }
+
+          // Feedback de Apellido
+          const apellidoErr = document.getElementById("apellido-error");
+          if (apellidoVal === "") {
+            apellidoErr.classList.add("visible");
+            apellidoInput.classList.add("input-error");
+          } else {
+            apellidoErr.classList.remove("visible");
+            apellidoInput.classList.remove("input-error");
+          }
+
+          // Feedback de DNI
+          const dniErr = document.getElementById("dni-error");
+          if (dniVal === "" || dniVal.length < 7) {
+            dniErr.classList.add("visible");
+            dniInput.classList.add("input-error");
+          } else {
+            dniErr.classList.remove("visible");
+            dniInput.classList.remove("input-error");
+          }
+
+          // Feedback de Email
+          const emailErr = document.getElementById("email-error");
+          if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+            emailErr.classList.add("visible");
+            emailInput.classList.add("input-error");
+          } else {
+            emailErr.classList.remove("visible");
+            emailInput.classList.remove("input-error");
+          }
+
+          const isValid =
+            nombreVal !== "" &&
+            apellidoVal !== "" &&
+            dniVal.length >= 7 &&
+            (!emailVal || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal));
+          if (startBtn) startBtn.disabled = !isValid;
+        };
+
+        registrationInputs.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener("input", validateForm);
+        });
+
+        // Agregar campo email a los oyentes por si acaso
+        document
+          .getElementById("email")
+          .addEventListener("input", validateForm);
+        // Initial validation call to set button state and hide errors
+        validateForm();
+
+        if (studentForm) {
+          studentForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            // Re-validate on submit to ensure no bypass
+            validateForm();
+            if (startBtn.disabled) {
+              return; // If button is disabled, form is invalid
+            }
+
+            const nombre = document.getElementById("nombre").value.trim();
+            const apellido = document.getElementById("apellido").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const dni = document.getElementById("dni").value.trim();
+
+            studentData = { nombre, apellido, email, dni };
+            buildQuiz();
+            showScreen("screen-quiz");
+          });
+        }
+      });
+
+      function showScreen(id) {
+        document.querySelectorAll(".screen").forEach((s) => {
+          s.classList.remove("active");
+          s.style.display = "none"; // Forzar ocultación
+        });
+        const target = document.getElementById(id);
+        if (target) {
+          target.classList.add("active");
+          target.style.display = target.id === "results-area" ? "block" : "";
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function buildQuiz() {
+        const container = document.getElementById("quiz");
+        container.innerHTML = "";
+        bank.forEach((item, idx) => {
+          const qDiv = document.createElement("div");
+          qDiv.className = "card";
+          qDiv.innerHTML = `
+        <div class="q-head">
+          <div class="q-num">${idx + 1}</div>
+          <div class="q-text">${item.q}</div>
+        </div>
+          <div id="opts-${idx}">
+            ${item.opts
+              .map((ot, i) => {
+                // Resaltar la letra (a, b, c, d)
+                const parts = ot.split(") ");
+                const labelContent =
+                  parts.length > 1
+                    ? `<strong>${parts[0]})</strong> ${parts.slice(1).join(") ")}`
+                    : ot;
+                return `
+                <label class="opt" id="opt-${idx}-${i}">
+                  <input type="radio" name="q${idx}" value="${i}">
+                  <div class="label">${labelContent}</div>
+                </label>
+              `;
+              })
+              .join("")}
+          </div>
+      `;
+          const inputs = qDiv.querySelectorAll("input");
+          inputs.forEach((inp) => {
+            inp.parentElement.addEventListener("click", (e) => {
+              if (locked) return;
+              e.preventDefault();
+
+              const isChecked = inp.checked;
+
+              // Limpiar estados de todos en el grupo (incluyendo correcciones visuales)
+              qDiv.querySelectorAll(".opt").forEach((o) => {
+                o.classList.remove("selected", "incorrect", "correct");
+                o.style.opacity = "";
+              });
+              qDiv
+                .querySelectorAll("input")
+                .forEach((i) => (i.checked = false));
+
+              if (!isChecked) {
+                // Si no estaba marcado, lo marcamos
+                inp.checked = true;
+                inp.parentElement.classList.add("selected");
+              }
+
+              updateProgress();
+            });
+          });
+          container.appendChild(qDiv);
+        });
+        updateProgress();
+      }
+
+      function updateProgress() {
+        const scoreBtn = document.getElementById("scoreBtn");
+        const pendingSection = document.getElementById("pendingSection");
+        const pendingTitle = document.getElementById("pendingTitle");
+        const pendingList = document.getElementById("pendingList");
+
+        if (!scoreBtn) return;
+
+        const answeredCount = bank.filter((_, i) =>
+          document.querySelector(`input[name="q${i}"]:checked`),
+        ).length;
+
+        scoreBtn.disabled = answeredCount === 0;
+        pendingSection.style.display = "block";
+
+        if (attempts === 0) {
+          // PRIMER INTENTO
+          scoreBtn.textContent = "Calificar primer intento";
+          if (answeredCount === bank.length) {
+            pendingTitle.style.display = "none";
+            pendingList.style.display = "none";
+          } else {
+            pendingTitle.style.display = "block";
+            pendingTitle.textContent = "Preguntas sin responder:";
+            pendingList.style.display = "flex";
+            pendingList.innerHTML = "";
+            bank.forEach((_, i) => {
+              if (!document.querySelector(`input[name="q${i}"]:checked`)) {
+                const dot = document.createElement("div");
+                dot.className = "pending-item";
+                dot.textContent = i + 1;
+                pendingList.appendChild(dot);
+              }
+            });
+          }
+        } else if (!locked) {
+          // SEGUNDO INTENTO (Modo Híbrido Inteligente)
+          pendingSection.classList.add("repeating");
+          scoreBtn.textContent = "Calificar segundo intento";
+          pendingTitle.style.display = "block";
+          pendingTitle.textContent = "Mapa de revisión (Segundo Intento):";
+          pendingTitle.style.color = "var(--teal)";
+          pendingList.style.display = "flex";
+          pendingList.innerHTML = "";
+
+          bank.forEach((item, i) => {
+            const selInput = document.querySelector(
+              `input[name="q${i}"]:checked`,
+            );
+            const currentVal = selInput ? +selInput.value : -1;
+            const originalVal =
+              firstAttemptSelections[i] !== undefined
+                ? firstAttemptSelections[i]
+                : -1;
+
+            const dot = document.createElement("div");
+            dot.className = "pending-item";
+            dot.textContent = i + 1;
+
+            // Lógica de colores híbrida solicitada:
+            if (currentVal !== originalVal) {
+              // Si el usuario cambió la respuesta o respondió una que estaba vacía -> AMARILLO (Editada)
+              dot.classList.add("answered");
+            } else {
+              // Si la respuesta es la misma que en el 1er intento, mostramos el resultado corregido original:
+              if (originalVal === -1) {
+                dot.classList.add("unanswered"); // No contestada (Pálido)
+              } else if (originalVal === item.correct) {
+                dot.classList.add("correct"); // Ya estaba bien (Verde)
+              } else {
+                dot.classList.add("incorrect"); // Ya estaba mal (Rojo)
+              }
+            }
+            pendingList.appendChild(dot);
+          });
+        } else {
+          // EVALUACIÓN FINALIZADA (Locked - Revelamos todo)
+          pendingTitle.textContent = "Resultado Final de la Evaluación:";
+          pendingList.innerHTML = "";
+          bank.forEach((item, i) => {
+            const selInput = document.querySelector(
+              `input[name="q${i}"]:checked`,
+            );
+            const dot = document.createElement("div");
+            dot.className = "pending-item";
+            dot.textContent = i + 1;
+
+            if (selInput && +selInput.value === item.correct) {
+              dot.classList.add("correct"); // Verde
+            } else {
+              dot.classList.add("incorrect"); // Rojo
+            }
+            pendingList.appendChild(dot);
+          });
+          scoreBtn.style.display = "none";
+        }
+      }
+
+      document.getElementById("scoreBtn").addEventListener("click", () => {
+        if (locked) return;
+
+        let correct = 0;
+        bank.forEach((item, i) => {
+          const selInput = document.querySelector(
+            `input[name="q${i}"]:checked`,
+          );
+          const sel = selInput ? +selInput.value : -1;
+          if (sel === item.correct) correct++;
+        });
+
+        const resultsArea = document.getElementById("results-area");
+        resultsArea.style.display = "block";
+
+        if (attempts === 0) {
+          score1 = correct;
+          const pct = Math.round((score1 / bank.length) * 100);
+
+          // Marcar errores visuales
+          bank.forEach((item, i) => {
+            const selInput = document.querySelector(
+              `input[name="q${i}"]:checked`,
+            );
+
+            if (selInput) {
+              const selValue = +selInput.value;
+              const optWrapper = selInput.closest(".opt");
+              optWrapper.classList.remove("incorrect", "correct");
+
+              if (selValue !== item.correct) {
+                optWrapper.classList.add("incorrect");
+              }
+            } else {
+              // Si no respondió, podemos marcar la pregunta de alguna forma o dejarla
+              // En este caso, simplemente no hacemos nada visual en las opciones
+            }
+          });
+
+          updateRing(pct, `${score1}/${bank.length}`, "Puntaje");
+          document.getElementById("result-title").textContent =
+            "Resultado Parcial";
+          document.getElementById("scoreBtn").textContent =
+            "Enviar Correcciones y Finalizar";
+
+          // Activar estilo de "repetición/corrección"
+          document.getElementById("quiz").classList.add("repeating");
+
+          // Guardar las selecciones del primer intento para el mapa híbrido
+          firstAttemptSelections = bank.map((_, i) => {
+            const sel = document.querySelector(`input[name="q${i}"]:checked`);
+            return sel ? +sel.value : -1;
+          });
+
+          // Desplazar suavemente hasta los resultados
+          resultsArea.scrollIntoView({ behavior: "smooth" });
+          attempts = 1;
+          updateProgress(); // Refrescar el mapa con el modo híbrido
+        } else {
+          score2 = correct;
+          locked = true;
+          document.body.classList.add("locked");
+
+          // Marcar respuestas finales (Verdes y Rojas)
+          bank.forEach((item, i) => {
+            const selInput = document.querySelector(
+              `input[name="q${i}"]:checked`,
+            );
+
+            // Marcar siempre la correcta para que aprenda
+            const correctOpt = document.getElementById(
+              `opt-${i}-${item.correct}`,
+            );
+            correctOpt.classList.add("correct");
+
+            if (selInput) {
+              const selValue = +selInput.value;
+              const optWrapper = selInput.closest(".opt");
+              optWrapper.classList.remove("incorrect", "correct");
+
+              if (selValue === item.correct) {
+                optWrapper.classList.add("correct");
+              } else {
+                optWrapper.classList.add("incorrect");
+                correctOpt.style.opacity = "0.8";
+              }
+            } else {
+              // Si no respondió, la correcta se marcó arriba,
+              // pero podemos atenuar un poco para indicar que faltó la selección
+              correctOpt.style.opacity = "0.5";
+            }
+          });
+
+          const grade1 = (score1 / bank.length) * 10;
+          const grade2 = (score2 / bank.length) * 10;
+          const avgGrade = (grade1 + grade2) / 2;
+          const pctFinal = Math.round((avgGrade / 10) * 100);
+
+          // Mostrar resumen final con elegancia
+          document.getElementById("result-title").textContent =
+            "Evaluación Finalizada";
+          document.getElementById("final-stats-grid").style.display = "grid";
+          document.getElementById("rank-container").style.display = "block";
+          document.getElementById("finalFeedback").style.display = "block";
+          document.getElementById("scoreBtn").style.display = "none";
+
+          // Llenar Tarjetas
+          document.getElementById("score1-grade").textContent =
+            grade1.toFixed(1);
+          document.getElementById("score1-pct").textContent =
+            `${Math.round((score1 / bank.length) * 100)}%`;
+          document.getElementById("score1-val").textContent =
+            `${score1}/${bank.length}`;
+
+          document.getElementById("score2-grade").textContent =
+            grade2.toFixed(1);
+          document.getElementById("score2-pct").textContent =
+            `${Math.round((score2 / bank.length) * 100)}%`;
+          document.getElementById("score2-val").textContent =
+            `${score2}/${bank.length}`;
+
+          updateRing(pctFinal, avgGrade.toFixed(1), "Promedio");
+          updateRank(pctFinal);
+
+          resultsArea.scrollIntoView({ behavior: "smooth" });
+          sendData(pctFinal, avgGrade);
+          updateProgress(); // Mostrar el mapa final verde/rojo
+        }
+      });
+
+      function updateRing(pct, middleValue = null, label = "Puntaje") {
+        const ringFill = document.getElementById("ring-fill");
+        const pctDisplay = document.getElementById("final-pct-display");
+        const gradeDisplay = document.getElementById("final-grade-display");
+        const labelDisplay = document.querySelector(".pct-label");
+
+        const circumference = 440;
+        const offset = circumference - (pct / 100) * circumference;
+        ringFill.style.strokeDashoffset = offset;
+
+        labelDisplay.textContent = label;
+
+        if (middleValue !== null) {
+          // Estado Final: Mostramos ambos
+          pctDisplay.textContent = pct + "%";
+          gradeDisplay.textContent = middleValue;
+          gradeDisplay.style.display = "block";
+        } else {
+          // Estado Parcial: Solo porcentaje
+          gradeDisplay.style.display = "none";
+          let currentPct = 0;
+          const interval = setInterval(() => {
+            if (currentPct >= pct) {
+              clearInterval(interval);
+              pctDisplay.textContent = pct + "%";
+            } else {
+              currentPct++;
+              pctDisplay.textContent = currentPct + "%";
+            }
+          }, 15);
+        }
+      }
+
+      function updateRank(pct) {
+        const badge = document.getElementById("rankBadge");
+        const feedback = document.getElementById("finalFeedback");
+        let key = "low";
+
+        if (pct >= 90) {
+          key = "high";
+          badge.textContent = "Maestría Sistémica";
+          badge.style.background = "linear-gradient(135deg, #ffd700, #ffa500)";
+        } else if (pct >= 70) {
+          key = "mid";
+          badge.textContent = "Sabiduría Integrada";
+          badge.style.background =
+            "linear-gradient(135deg, var(--accent), var(--teal))";
+        } else {
+          key = "low";
+          badge.textContent = "Semilla en Crecimiento";
+          badge.style.background = "linear-gradient(135deg, #4b5563, #374151)";
+        }
+
+        const pool = feedbackPhrases[key];
+        feedback.textContent = pool[Math.floor(Math.random() * pool.length)];
+      }
+
+      function sendData(pct, avg) {
+        const statusEl = document.getElementById("sendStatus");
+        if (!statusEl) return;
+
+        statusEl.style.display = "block";
+        statusEl.className = "send-status sending";
+        statusEl.textContent = "⏳ Guardando resultados...";
+
+        const payload = {
+          nombre: studentData.nombre,
+          apellido: studentData.apellido,
+          email: studentData.email,
+          dni: studentData.dni,
+          score1: score1,
+          score2: score2,
+          unidad: QUIZ_CONFIG.quizNumber,
+        };
+
+        fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify(payload),
+        })
+          .then(() => {
+            statusEl.className = "send-status ok";
+            statusEl.textContent = "✅ Resultados guardados con éxito.";
+            const adminBtn = document.getElementById("adminAccessBtn");
+            if (adminBtn) adminBtn.style.display = "block";
+          })
+          .catch((error) => {
+            console.error("Error en envío:", error);
+            statusEl.style.color = "var(--red)";
+            statusEl.textContent = "❌ Error al intentar conectar.";
+          });
+      }
+
+      function handleAdminAccess() {
+        // En lugar de un prompt que puede bloquearse, mostramos el recuadro
+        document.getElementById("adminLoginBox").style.display = "block";
+        document.getElementById("adminAccessBtn").style.display = "none";
+        document.getElementById("adminKey").focus();
+      }
+
+      function verifyAdmin() {
+        const passInput = document.getElementById("adminKey");
+        const pass = passInput.value.trim();
+        const errorMsg = document.getElementById("admin-error-msg");
+        const fullSheetUrl =
+          "https://docs.google.com/spreadsheets/d/1ZpD-k19UzMdsGwYCqN8CojZ3pemM771kBi0uDMJzp1o/edit";
+
+        if (pass === "24521983") {
+          errorMsg.style.display = "none";
+          const box = document.getElementById("adminLoginBox");
+          box.innerHTML = `
+            <p style="color:var(--teal); font-weight:800; margin-bottom:12px;">✅ IDENTIDAD VERIFICADA</p>
+            <p style="font-size: 0.85rem; color: #fff; margin-bottom: 20px;">
+              Acceso concedido al Registro de Notas:
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+              <a href="${fullSheetUrl}" target="_blank" class="external-link-btn" style="width: 100%;">
+                🔗 REGISTRO DE NOTAS
+              </a>
+              <button onclick="copyToClipboard('${fullSheetUrl}')"
+                      style="background: transparent; color: var(--teal); border: 1px solid var(--teal); padding: 5px 15px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; cursor: pointer; text-transform: uppercase;">
+                Copiar enlace al portapapeles
+              </button>
+            </div>
+            <p id="copyFeedback" style="font-size:0.7rem; color:var(--teal); margin-top:12px; display:none;">¡Enlace copiado con éxito!</p>
+          `;
+        } else {
+          errorMsg.textContent = "❌ Clave incorrecta. Inténtalo de nuevo.";
+          errorMsg.style.display = "block";
+          passInput.value = "";
+          passInput.focus();
+
+          // Efecto de vibración opcional si quieres
+          const box = document.getElementById("adminLoginBox");
+          box.style.animation = "none";
+          box.offsetHeight; // trigger reflow
+          box.style.animation = "shake 0.4s ease-in-out";
+        }
+      }
+
+      function copyToClipboard(text) {
+        // Método moderno
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard
+            .writeText(text)
+            .then(() => {
+              showCopyFeedback();
+            })
+            .catch((err) => {
+              fallbackCopy(text);
+            });
+        } else {
+          // Método antiguo de respaldo (Fallback)
+          fallbackCopy(text);
+        }
+      }
+
+      function fallbackCopy(text) {
+        try {
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          // Aseguramos que no se vea pero que sea funcional
+          textArea.style.position = "fixed";
+          textArea.style.left = "-9999px";
+          textArea.style.top = "0";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          const successful = document.execCommand("copy");
+          document.body.removeChild(textArea);
+          if (successful) showCopyFeedback();
+        } catch (err) {
+          console.error("No se pudo copiar", err);
+        }
+      }
+
+      function showCopyFeedback() {
+        const feedback = document.getElementById("copyFeedback");
+        if (feedback) {
+          feedback.style.display = "block";
+          setTimeout(() => (feedback.style.display = "none"), 2000);
+        }
+      }
+
+      // Estrellas
+      (function initStars() {
+        const c = document.getElementById("stars-bg");
+        for (let i = 0; i < 80; i++) {
+          const s = document.createElement("div");
+          s.className = "star";
+          const size = 1 + Math.random() * 2;
+          s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random() * 100}%;top:${Math.random() * 100}%;--d:${6 + Math.random() * 8}s;`;
+          c.appendChild(s);
+        }
+      })();
+    </script>
+  </body>
+</html>
